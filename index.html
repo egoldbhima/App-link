@@ -1,37 +1,53 @@
-<script>
-  function routeUser() {
-    const IOS_URL = "https://apps.apple.com/in/app/bhima-e-gold/id6753930510";
-    const ANDROID_URL = "https://1ve.in/MBHIMA/bWKQ7";
-    const DESKTOP_URL = "https://1ve.in/MBHIMA/bWKQ7";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirecting...</title>
 
-    const ua = navigator.userAgent || navigator.vendor || window.opera;
-    const urlParams = new URLSearchParams(window.location.search);
-    const campaignSource = urlParams.get('ref') || 'direct'; // Capture ?ref= campaign tags
+  <!-- GoatCounter Script -->
+  <script data-goatcounter="https://bhimajewellery.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
 
-    let target = DESKTOP_URL;
-    let eventName = "click-desktop";
+  <script>
+    function routeUser() {
+      const IOS_URL = "https://apps.apple.com/in/app/bhima-e-gold/id6753930510";
+      const ANDROID_URL = "https://1ve.in/MBHIMA/bWKQ7";
+      const DESKTOP_URL = "https://1ve.in/MBHIMA/bWKQ7";
 
-    if (/android/i.test(ua)) {
-      target = ANDROID_URL;
-      eventName = "click-android";
-    } else if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
-      target = IOS_URL;
-      eventName = "click-ios";
+      const ua = navigator.userAgent || navigator.vendor || window.opera;
+      const urlParams = new URLSearchParams(window.location.search);
+      const ref = urlParams.get('ref') || 'direct'; // Capture channel source
+
+      let device = "desktop";
+      let target = DESKTOP_URL;
+
+      if (/android/i.test(ua)) {
+        device = "android";
+        target = ANDROID_URL;
+      } else if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
+        device = "ios";
+        target = IOS_URL;
+      }
+
+      // Track as a custom event so it shows under "Campaigns" / "Events"
+      if (window.goatcounter && window.goatcounter.count) {
+        window.goatcounter.count({
+          path: 'click-' + ref + '-' + device,
+          title: ref.toUpperCase() + ' Click (' + device + ')',
+          event: true
+        });
+      }
+
+      setTimeout(function() {
+        window.location.replace(target);
+      }, 200);
     }
 
-    // Pass custom event path, custom title, and campaign source to GoatCounter
-    if (window.goatcounter && window.goatcounter.count) {
-      window.goatcounter.count({
-        path: eventName + "-" + campaignSource,
-        title: "Redirect (" + eventName + ") via " + campaignSource,
-        event: true
-      });
-    }
-
-    setTimeout(function() {
-      window.location.replace(target);
-    }, 150);
-  }
-
-  window.addEventListener("DOMContentLoaded", routeUser);
-</script>
+    window.addEventListener("DOMContentLoaded", routeUser);
+  </script>
+</head>
+<body>
+  <p>Redirecting to store...</p>
+</body>
+</html>
